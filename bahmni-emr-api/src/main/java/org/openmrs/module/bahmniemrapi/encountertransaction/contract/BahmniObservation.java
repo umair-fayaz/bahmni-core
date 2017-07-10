@@ -40,6 +40,8 @@ public class BahmniObservation implements Comparable<BahmniObservation>{
     private Boolean isUnknown;
     private String formNamespace;
     private String formFieldPath;
+    private String interpretation;
+    private String status;
 
     @JsonIgnore
     private Serializable complexData;
@@ -399,5 +401,25 @@ public class BahmniObservation implements Comparable<BahmniObservation>{
     @JsonIgnore
     public void setComplexData(Serializable complexData) {
         this.complexData = complexData;
+    }
+
+    public String getInterpretation() {
+        return encounterTransactionObservation.getInterpretation();
+    }
+
+    public BahmniObservation setInterpretation(String interpretation) {
+        encounterTransactionObservation.setInterpretation(interpretation);
+        this.interpretation = interpretation;
+        return this;
+    }
+
+    public String getStatus() {
+        return encounterTransactionObservation.getStatus();
+    }
+
+    public BahmniObservation setStatus(String status) {
+        encounterTransactionObservation.setStatus(status);
+        this.status = status;
+        return this;
     }
 }
