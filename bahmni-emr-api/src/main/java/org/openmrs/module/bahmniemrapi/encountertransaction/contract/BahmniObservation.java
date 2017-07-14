@@ -422,4 +422,14 @@ public class BahmniObservation implements Comparable<BahmniObservation>{
         this.status = status;
         return this;
     }
+
+    @JsonProperty
+    public Serializable getComplexData() {
+        return complexData;
+    }
+
+    @JsonIgnore
+    public void setComplexData(Serializable complexData) {
+        this.complexData = complexData;
+    }
 }
