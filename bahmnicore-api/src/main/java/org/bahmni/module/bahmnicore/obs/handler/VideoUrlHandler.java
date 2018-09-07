@@ -6,7 +6,7 @@ import org.openmrs.obs.ComplexObsHandler;
 import org.openmrs.obs.handler.AbstractHandler;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class VideoUrlHandler extends AbstractHandler implements ComplexObsHandler {
 
     @Override

@@ -22,10 +22,12 @@ import org.openmrs.module.bahmniemrapi.encountertransaction.contract.BahmniObser
 import org.openmrs.module.bahmniemrapi.encountertransaction.mapper.OMRSObsToBahmniObsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-@Service
+@Service(value = "bahmniObsService")
+@Transactional
 public class BahmniObsServiceImpl implements BahmniObsService {
 
     private ObsDao obsDao;

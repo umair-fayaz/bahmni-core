@@ -8,7 +8,7 @@
 		http://www.springframework.org/schema/context
 		http://www.springframework.org/schema/context/spring-context-3.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
-    <context:component-scan base-package="org.bahmni.module"/>
+    <context:component-scan base-package="org.bahmni.module.bahmnicore"/>
 
     <bean id="sqlSearchService" class="org.bahmni.module.bahmnicore.service.impl.SqlSearchServiceImpl">
         <property name="administrationService" ref="adminService"/>
@@ -16,10 +16,11 @@
 
     <util:list id="servicePostInterceptors">
         <ref bean="patientProgramAdviceInterceptor"/>
+        <!--
+            The above is fetched from openmrs-atomfeed module. we should move to Bahmni core.
+            We should move the code, definition in moduleAppContext.xml, config.xml to Bahmni-core
+        -->
     </util:list>
-
-
-    <bean id="orderDao" class="org.bahmni.module.bahmnicore.dao.impl.OrderDaoImpl" />
 
     <bean parent="obsServiceTarget" >
         <property name="handlers">
@@ -44,7 +45,7 @@
         </property>
     </bean>
 
-    <bean name="bahmniProgramWorkflowService" class="org.bahmni.module.bahmnicore.service.impl.BahmniProgramWorkflowServiceImpl">
+    <bean name="bahmniProgramWorkflowService" class="org.bahmni.module.bahmnicore.service.impl.BahmniProgramWorkflowServiceImpl" autowire="constructor">
         <property name="programWorkflowDAO">
             <bean class="org.bahmni.module.bahmnicore.dao.impl.BahmniHibernateProgramWorkflowDAOImpl">
                 <property name="sessionFactory">
@@ -52,62 +53,9 @@
                 </property>
             </bean>
         </property>
-    </bean>
-
-    <!-- Services accessible via Context.getService() -->
-    <bean parent="serviceContext">
-        <property name="moduleService">
-            <list merge="true">
-                <value>org.bahmni.module.bahmnicore.service.BahmniProgramWorkflowService</value>
-                <bean
-                        class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-                    <property name="transactionManager">
-                        <ref bean="transactionManager" />
-                    </property>
-                    <property name="target" ref="bahmniProgramWorkflowService">
-                    </property>
-                    <property name="preInterceptors">
-                        <ref bean="serviceInterceptors" />
-                    </property>
-                    <property name="transactionAttributeSource">
-                        <ref bean="transactionAttributeSource" />
-                    </property>
-                    <property name="postInterceptors">
-                        <ref bean="servicePostInterceptors" />
-                    </property>
-                </bean>
-            </list>
-        </property>
-    </bean>
-
-    <bean parent="serviceContext">
-        <property name="moduleService">
-            <list merge="true">
-                <value>org.openmrs.module.bahmniemrapi.encountertransaction.service.BahmniEncounterTransactionService</value>
-                <ref local="bahmniEncounterTransactionService"/>
-            </list>
-        </property>
-    </bean>
-
-    <bean parent="serviceContext">
-        <property name="moduleService">
-            <list merge="true">
-                <value>org.bahmni.module.bahmnicore.service.BahmniObsService</value>
-                <ref bean="bahmniObsServiceImpl"/>
-            </list>
-        </property>
-    </bean>
-
-    <bean id="bahmniEncounterTransactionService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-        <property name="transactionManager">
-            <ref bean="transactionManager"/>
-        </property>
-        <property name="target"><ref local="bahmniEncounterTransactionServiceTarget"/></property>
-        <property name="preInterceptors">
-            <ref bean="serviceInterceptors"/>
-        </property>
-        <property name="transactionAttributeSource">
-            <ref bean="transactionAttributeSource"/>
+        <property name="episodeService">
+            <!--This is defined and injected from dependency openmrs-module-episodes -->
+            <ref bean="episodeServiceImpl"/>
         </property>
     </bean>
 
@@ -128,22 +76,50 @@
         <constructor-arg ref="locationService" />
         <constructor-arg ref="providerService" />
         <constructor-arg ref="bahmniVisitAttributeService"/>
+    </bean>
 
+    <bean id="emrApiConceptMapper" class="org.openmrs.module.emrapi.encounter.ConceptMapper"/>
+    <bean id="bahmniOrderServiceTarget" class="org.bahmni.module.bahmnicore.service.impl.BahmniOrderServiceImpl" autowire="constructor">
+        <constructor-arg ref="orderService"/>
+        <constructor-arg ref="bahmniObsService"/>
+        <constructor-arg  ref="emrApiConceptMapper"/>
+    </bean>
+
+
+    <!-- Services accessible via Context.getService() -->
+    <bean parent="serviceContext">
+        <property name="moduleService">
+            <list merge="true">
+                <value>org.bahmni.module.bahmnicore.service.BahmniProgramWorkflowService</value>
+                <bean class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+                    <property name="target" ref="bahmniProgramWorkflowService">
+                    </property>
+                    <property name="transactionManager">
+                        <ref bean="transactionManager" />
+                    </property>
+                    <property name="preInterceptors">
+                        <ref bean="serviceInterceptors" />
+                    </property>
+                    <property name="transactionAttributeSource">
+                        <ref bean="transactionAttributeSource" />
+                    </property>
+                    <property name="postInterceptors">
+                        <ref bean="servicePostInterceptors" />
+                    </property>
+                </bean>
+            </list>
+        </property>
     </bean>
 
     <bean parent="serviceContext">
         <property name="moduleService">
             <list merge="true">
                 <value>org.bahmni.module.bahmnicore.service.BahmniOrderService</value>
-                <bean
-                        class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+                <bean class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+                    <property name="target" ref="bahmniOrderServiceTarget">
+                    </property>
                     <property name="transactionManager">
                         <ref bean="transactionManager" />
-                    </property>
-                    <property name="target">
-                        <bean class="org.bahmni.module.bahmnicore.service.impl.BahmniOrderServiceImpl">
-
-                        </bean>
                     </property>
                     <property name="preInterceptors">
                         <ref bean="serviceInterceptors" />
@@ -155,4 +131,34 @@
             </list>
         </property>
     </bean>
+
+    <bean parent="serviceContext">
+        <property name="moduleService">
+            <list merge="true">
+                <value>org.openmrs.module.bahmniemrapi.encountertransaction.service.BahmniEncounterTransactionService</value>
+                <bean class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+                    <property name="target"><ref local="bahmniEncounterTransactionServiceTarget"/></property>
+                    <property name="transactionManager">
+                        <ref bean="transactionManager"/>
+                    </property>
+                    <property name="preInterceptors">
+                        <ref bean="serviceInterceptors"/>
+                    </property>
+                    <property name="transactionAttributeSource">
+                        <ref bean="transactionAttributeSource"/>
+                    </property>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <bean parent="serviceContext">
+        <property name="moduleService">
+            <list merge="true">
+                <value>org.bahmni.module.bahmnicore.service.BahmniObsService</value>
+                <ref bean="bahmniObsService"/>
+            </list>
+        </property>
+    </bean>
+
 </beans>

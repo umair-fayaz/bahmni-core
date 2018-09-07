@@ -5,7 +5,7 @@ import org.openmrs.PatientProgram;
 import org.openmrs.api.APIException;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component("noopBahmniProgramServiceValidator")
 public class BahmniProgramServiceValidatorImpl implements BahmniProgramServiceValidator {
     public void validate(PatientProgram patientProgram) throws APIException {}
 }

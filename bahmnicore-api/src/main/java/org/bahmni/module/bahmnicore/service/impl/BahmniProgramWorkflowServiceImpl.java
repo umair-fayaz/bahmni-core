@@ -16,19 +16,13 @@ import org.openmrs.module.episodes.service.EpisodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Transactional
 public class BahmniProgramWorkflowServiceImpl extends ProgramWorkflowServiceImpl implements BahmniProgramWorkflowService {
 
-    @Autowired
     private EpisodeService episodeService;
-    @Autowired
-    private List<BahmniProgramServiceValidator> bahmniProgramServiceValidators;
+    private List<BahmniProgramServiceValidator> bahmniProgramServiceValidators = new ArrayList<>();
 
     public BahmniProgramWorkflowServiceImpl(BahmniProgramWorkflowDAO programWorkflowDAO, EpisodeService episodeService) {
         this.episodeService = episodeService;
@@ -94,6 +88,21 @@ public class BahmniProgramWorkflowServiceImpl extends ProgramWorkflowServiceImpl
     @Override
     public List<BahmniPatientProgram> getPatientProgramByAttributeNameAndValue(String attributeName, String attributeValue) {
         return ((BahmniProgramWorkflowDAO)dao).getPatientProgramByAttributeNameAndValue(attributeName, attributeValue);
+    }
+
+    public void setEpisodeService(EpisodeService episodeService) {
+        this.episodeService = episodeService;
+    }
+
+    public void setBahmniProgramServiceValidators(List<BahmniProgramServiceValidator> bahmniProgramServiceValidators) {
+        this.bahmniProgramServiceValidators = bahmniProgramServiceValidators;
+    }
+
+    public void registerProgramServiceValidator(BahmniProgramServiceValidator programServiceValidator) {
+        if (bahmniProgramServiceValidators == null) {
+            bahmniProgramServiceValidators = new ArrayList<>();
+        }
+        bahmniProgramServiceValidators.add(programServiceValidator);
     }
 
     private void preSaveValidation(PatientProgram patientProgram) {

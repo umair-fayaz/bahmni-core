@@ -12,7 +12,7 @@ import org.openmrs.obs.ComplexObsHandler;
 import org.openmrs.obs.handler.AbstractHandler;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class LocationObsHandler extends AbstractHandler implements ComplexObsHandler {
 
     public static final Log log = LogFactory.getLog(LocationObsHandler.class);

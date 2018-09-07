@@ -17,13 +17,13 @@
         <property name="moduleService">
             <list merge="true">
                 <value>org.openmrs.module.bahmniemrapi.visitlocation.BahmniVisitLocationService</value>
-                <bean
-                        class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+                <bean  class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+                    <property name="target" ref="bahmniVisitLocationService">
+                    </property>
                     <property name="transactionManager">
                         <ref bean="transactionManager" />
                     </property>
-                    <property name="target" ref="bahmniVisitLocationService">
-                    </property>
+
                     <property name="preInterceptors">
                         <ref bean="serviceInterceptors" />
                     </property>

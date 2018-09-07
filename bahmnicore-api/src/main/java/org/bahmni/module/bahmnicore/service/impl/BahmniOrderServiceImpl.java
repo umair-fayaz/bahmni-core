@@ -11,13 +11,14 @@ import org.openmrs.module.bahmniemrapi.order.contract.BahmniOrder;
 import org.openmrs.module.emrapi.encounter.ConceptMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 
-@Service
+@Transactional
 public class BahmniOrderServiceImpl implements BahmniOrderService {
 
     private ConceptMapper conceptMapper;
