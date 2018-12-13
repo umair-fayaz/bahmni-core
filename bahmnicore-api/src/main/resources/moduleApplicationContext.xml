@@ -46,17 +46,15 @@
     </bean>
 
     <bean name="bahmniProgramWorkflowService" class="org.bahmni.module.bahmnicore.service.impl.BahmniProgramWorkflowServiceImpl" autowire="constructor">
-        <property name="programWorkflowDAO">
+        <constructor-arg>
             <bean class="org.bahmni.module.bahmnicore.dao.impl.BahmniHibernateProgramWorkflowDAOImpl">
                 <property name="sessionFactory">
                     <ref bean="sessionFactory" />
                 </property>
             </bean>
-        </property>
-        <property name="episodeService">
-            <!--This is defined and injected from dependency openmrs-module-episodes -->
-            <ref bean="episodeServiceImpl"/>
-        </property>
+        </constructor-arg>
+        <!--This is defined and injected from dependency openmrs-module-episodes. Since the bean in not explicitly given a name, spring component scan will just  -->
+        <constructor-arg ref="episodeServiceImpl"/>
     </bean>
 
     <bean id="bahmniEncounterTransactionServiceTarget" class="org.openmrs.module.bahmniemrapi.encountertransaction.impl.BahmniEncounterTransactionServiceImpl" autowire="constructor">
