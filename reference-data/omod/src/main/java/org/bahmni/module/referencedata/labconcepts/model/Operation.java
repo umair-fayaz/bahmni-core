@@ -17,6 +17,7 @@ import static org.bahmni.module.referencedata.labconcepts.model.event.ConceptSer
 import static org.bahmni.module.referencedata.labconcepts.model.event.ConceptServiceEventFactory.radiologyTestEvent;
 import static org.bahmni.module.referencedata.labconcepts.model.event.ConceptServiceEventFactory.sampleEvent;
 import static org.bahmni.module.referencedata.labconcepts.model.event.ConceptServiceEventFactory.testEvent;
+import static org.bahmni.module.referencedata.labconcepts.model.event.ConceptServiceEventFactory.sellableConceptEvent;
 
 public class Operation {
 
@@ -29,11 +30,16 @@ public class Operation {
             labConceptSetEvent(),
             allTestsAndPanelsConceptSetEvent(),
             drugEvent(),
-            radiologyTestEvent()
+            radiologyTestEvent(),
+            sellableConceptEvent()
     );
 
     public Operation(Method method) {
         this.name = method.getName();
+    }
+
+    public Operation(String methodName) {
+        this.name = methodName;
     }
 
     public List<Event> apply(Object[] arguments) throws Exception {
