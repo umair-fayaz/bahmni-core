@@ -41,6 +41,7 @@ import static java.util.stream.Collectors.toList;
 @Repository
 public class PatientDaoImpl implements PatientDao {
 
+    public static final int MAX_NGRAM_SIZE = 20;
     private SessionFactory sessionFactory;
 
     @Autowired
@@ -105,7 +106,7 @@ public class PatientDaoImpl implements PatientDao {
         QueryBuilder queryBuilder = fullTextSession.getSearchFactory().buildQueryBuilder().forEntity(PatientIdentifier.class).get();
         identifier = identifier.replace('%','*');
         org.apache.lucene.search.Query identifierQuery;
-        if(identifier.length() <= 20) {
+        if(identifier.length() <= MAX_NGRAM_SIZE) {
             identifierQuery = queryBuilder.keyword()
                     .wildcard().onField("identifierAnywhere").matching("*" + identifier.toLowerCase() + "*").createQuery();
         } else {

@@ -47,7 +47,7 @@ public class BahmniPatientDaoImplLuceneIT extends BaseIntegrationTest {
     }
 
     @Test
-    public void shouldSearchByExactPatientIdentifierWhenLengthIsGreaterThanTwentyChars() {
+    public void shouldSearchByExactPatientIdentifierWhenLengthIsGreaterThanMaxNGramLength() {
         String[] addressResultFields = {"city_village"};
         List<PatientResponse> patients = patientDao.getPatientsUsingLuceneSearch("GAN200004-2005-09-22-00-00", "", null, "city_village", "", 100, 0, null,"",null,addressResultFields,null, "c36006e5-9fbb-4f20-866b-0ece245615a1", false, false);
         assertEquals(1, patients.size());
