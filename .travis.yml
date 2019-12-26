@@ -1,7 +1,9 @@
 language: java
 jdk: openjdk8
+node_js: "6"
 install:
   - travis_wait mvn install -Dmaven.javadoc.skip=true -V -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+  - npm install -g compass@1.0.3
 script:
   - mvn verify -P IT -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn -pl bahmni-emr-api/
   - mvn verify -P IT -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn -pl bahmnicore-api/
