@@ -4,6 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.bahmni.module.bahmnicore.model.Document;
+import org.bahmni.module.bahmnicore.security.PrivilegeConstants;
 import org.bahmni.module.bahmnicore.service.PatientDocumentService;
 import org.openmrs.Encounter;
 import org.openmrs.Patient;
@@ -29,7 +30,6 @@ import java.util.HashMap;
 @Controller
 public class VisitDocumentController extends BaseRestController {
     private static final String INVALID_USER_PRIVILEGE = "User [%d] does not have require to delete patient file [%s]";
-    private static final String DELETE_PATIENT_DOCUMENT_PRIVILEGE = "Delete Patient Document";
     private final String baseVisitDocumentUrl = "/rest/" + RestConstants.VERSION_1 + "/bahmnicore/visitDocument";
     @Autowired
     private VisitDocumentService visitDocumentService;
@@ -74,18 +74,17 @@ public class VisitDocumentController extends BaseRestController {
     @RequestMapping(method = RequestMethod.DELETE, value = baseVisitDocumentUrl)
     @ResponseBody
     public ResponseEntity<Object> deleteDocument(@RequestParam(value = "filename") String fileName) {
-        if (Context.getUserContext().hasPrivilege(DELETE_PATIENT_DOCUMENT_PRIVILEGE)) {
-            try {
-                patientDocumentService.delete(fileName);
-                return new ResponseEntity<>(new HashMap<>(), HttpStatus.OK);
-            } catch (Exception e) {
-                HashMap<String, Object> response = new HashMap<>();
-                response.put("error", e.getMessage());
-                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-            }
-        } else {
+        if (!Context.getUserContext().hasPrivilege(PrivilegeConstants.DELETE_PATIENT_DOCUMENT_PRIVILEGE)) {
             logger.error(String.format(INVALID_USER_PRIVILEGE, getAuthenticatedUserId(), fileName));
             return new ResponseEntity<>(new HashMap<>(), HttpStatus.UNAUTHORIZED);
+        }
+        try {
+            patientDocumentService.delete(fileName);
+            return new ResponseEntity<>(new HashMap<>(), HttpStatus.OK);
+        } catch (Exception e) {
+            HashMap<String, Object> response = new HashMap<>();
+            response.put("error", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
     }
 

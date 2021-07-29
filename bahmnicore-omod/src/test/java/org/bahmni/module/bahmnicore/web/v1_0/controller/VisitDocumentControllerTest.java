@@ -1,6 +1,7 @@
 package org.bahmni.module.bahmnicore.web.v1_0.controller;
 
 import org.bahmni.module.bahmnicore.model.Document;
+import org.bahmni.module.bahmnicore.security.PrivilegeConstants;
 import org.bahmni.module.bahmnicore.service.PatientDocumentService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -118,7 +119,7 @@ public class VisitDocumentControllerTest {
     public void shouldCallDeleteWithGivenFileNameIfUserIsAuthenticated() throws Exception {
         PowerMockito.mockStatic(Context.class);
         when(Context.getUserContext()).thenReturn(userContext);
-        when(userContext.hasPrivilege("Delete Patient Document")).thenReturn(true);
+        when(userContext.hasPrivilege(PrivilegeConstants.DELETE_PATIENT_DOCUMENT_PRIVILEGE)).thenReturn(true);
         visitDocumentController.deleteDocument("testFile.png");
         verify(patientDocumentService, times(1)).delete("testFile.png");
     }
@@ -140,7 +141,7 @@ public class VisitDocumentControllerTest {
     public void shouldReturnHttpBadRequestIfFileNameIsNull() throws Exception {
         PowerMockito.mockStatic(Context.class);
         when(Context.getUserContext()).thenReturn(userContext);
-        when(userContext.hasPrivilege("Delete Patient Document")).thenReturn(true);
+        when(userContext.hasPrivilege(PrivilegeConstants.DELETE_PATIENT_DOCUMENT_PRIVILEGE)).thenReturn(true);
         doThrow(RuntimeException.class).when(patientDocumentService).delete(any());
         ResponseEntity<Object> responseEntity = visitDocumentController.deleteDocument(null);
         Assert.assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
@@ -154,7 +155,7 @@ public class VisitDocumentControllerTest {
     public void shouldNotCallDeleteWithGivenFileNameIfFileNameIsEmpty() throws Exception {
         PowerMockito.mockStatic(Context.class);
         when(Context.getUserContext()).thenReturn(userContext);
-        when(userContext.hasPrivilege("Delete Patient Document")).thenReturn(true);
+        when(userContext.hasPrivilege(PrivilegeConstants.DELETE_PATIENT_DOCUMENT_PRIVILEGE)).thenReturn(true);
         doThrow(RuntimeException.class).when(patientDocumentService).delete(any());
         ResponseEntity<Object> responseEntity = visitDocumentController.deleteDocument("");
         Assert.assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
