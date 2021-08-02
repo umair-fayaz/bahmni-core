@@ -31,7 +31,7 @@ import java.util.HashMap;
 @Controller
 public class VisitDocumentController extends BaseRestController {
     private static final String INSUFFICIENT_PRIVILEGE = "Insufficient privilege";
-    private static final String INVALID_USER_PRIVILEGE = "User [%d] does not have require to delete patient file [%s]";
+    private static final String INVALID_USER_PRIVILEGE = "User [%d] does not have required privilege to delete patient file [%s]";
     private final String baseVisitDocumentUrl = "/rest/" + RestConstants.VERSION_1 + "/bahmnicore/visitDocument";
     @Autowired
     private VisitDocumentService visitDocumentService;
