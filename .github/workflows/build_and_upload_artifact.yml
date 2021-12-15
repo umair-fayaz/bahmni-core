@@ -27,8 +27,13 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby }}
     - run:  gem install compass  
+    - name: Build with Maven
+        run: mvn clean package
+        
     - uses: actions/upload-artifact@v2
       with:
-        name: BahmniApps
-        path: bahmnicore-omod/target/bahmnicore-omod-0.94-SNAPSHOT.jar
+        run: zip -r Bahmnicore.zip bahmnicore-omod/target/bahmnicore-omod-0.94-SNAPSHOT.jar
+        name: Bahmnicore
+        path: bahmnicore-omod/target/Bahmnicore.zip
+        
 
