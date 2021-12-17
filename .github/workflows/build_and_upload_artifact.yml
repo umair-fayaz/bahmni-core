@@ -23,4 +23,6 @@ jobs:
           ruby-version: 2.5
     - name: Set up Compass
       run: gem install compass
+    - name: build aretfact
+      run: mvn clean package
     - run: echo "Hello World!"
