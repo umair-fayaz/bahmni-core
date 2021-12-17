@@ -21,4 +21,6 @@ jobs:
       uses: actions/setup-ruby@v1
       with:
           ruby-version: 2.5
+    - name: Set up Compass
+      run: gem install compass
     - run: echo "Hello World!"
